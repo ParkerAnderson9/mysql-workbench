@@ -33,6 +33,16 @@
 #include <boost/lexical_cast.hpp>
 
 #include "workbench/wb_context_ui.h"
+
+// Returns a light-theme/dark-theme color pair resolved against the
+// gtk-application-prefer-dark-theme setting so the inspector follows the
+// active color theme instead of hard-coding light backgrounds.
+static Gdk::Color themed_color(const char *light, const char *dark) {
+  Glib::RefPtr<Gtk::Settings> settings = Gtk::Settings::get_default();
+  bool darkMode = settings && settings->property_gtk_application_prefer_dark_theme();
+  return Gdk::Color(darkMode ? dark : light);
+}
+
 //------------------------------------------------------------------------------
 PropertyValue::PropertyValue(PropertyInspector* owner, const bec::NodeId& node) : _owner(owner), _prop_node(node) {
   add(_text);
@@ -42,7 +52,7 @@ PropertyValue::PropertyValue(PropertyInspector* owner, const bec::NodeId& node) 
   _text.show();
   _conn = signal_event().connect(sigc::mem_fun(this, &PropertyValue::on_event));
 
-  override_background_color(color_to_rgba(Gdk::Color("#f5f5f5")), Gtk::STATE_FLAG_NORMAL);
+  override_background_color(color_to_rgba(themed_color("#f5f5f5", "#2b2b2b")), Gtk::STATE_FLAG_NORMAL);
 }
 
 //------------------------------------------------------------------------------
@@ -298,7 +308,7 @@ void PropertyInspector::clear() {
   add(*_table);
   _table->show();
   Gtk::Viewport* vp = static_cast<Gtk::Viewport*>(_table->get_parent());
-  vp->override_background_color(color_to_rgba(Gdk::Color("#ffffff")), Gtk::STATE_FLAG_NORMAL);
+  vp->override_background_color(color_to_rgba(themed_color("#ffffff", "#1e1e1e")), Gtk::STATE_FLAG_NORMAL);
 }
 
 //------------------------------------------------------------------------------

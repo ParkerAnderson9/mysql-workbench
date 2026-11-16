@@ -1,0 +1,63 @@
+/*
+ * Dark theme adjustments for MySQL Workbench.
+ *
+ * Loaded after workbench.css when the dark theme is requested
+ * (mysql-workbench --dark-theme or WB_DARK_THEME=1).
+ *
+ * The toolkit dark variant is requested through
+ * gtk-application-prefer-dark-theme, so most of the chrome (menus, toolbars,
+ * dialogs, tabs, trees) is already dark. This file fixes the Workbench
+ * specific corners that assume a light background.
+ */
+
+/* Status bar text and text views follow the theme colors. */
+statusbar, statusbar label {
+  color: @theme_fg_color;
+}
+
+textview text, entry, searchbar entry {
+  color: @theme_text_color;
+  background-color: @theme_base_color;
+}
+
+/* Schema tree and result grids: keep theme foreground/background. */
+treeview.view {
+  color: @theme_fg_color;
+  background-color: @theme_base_color;
+}
+
+treeview.view:selected {
+  color: @theme_selected_fg_color;
+  background-color: @theme_selected_bg_color;
+}
+
+/* Notebook tabs are slightly more compact, same as workbench.css, but with
+ * theme colors so they do not fall back to the light tab background. */
+notebook > header {
+  background-color: @theme_bg_color;
+  border-color: @borders;
+}
+
+notebook > header > tabs > tab {
+  padding: 4px 5px 2px 5px;
+  color: @theme_unfocused_fg_color;
+}
+
+notebook > header > tabs > tab:checked {
+  color: @theme_fg_color;
+  background-color: @theme_base_color;
+}
+
+/* Toolbars and paned separators. */
+toolbar {
+  background-color: @theme_bg_color;
+}
+
+paned > separator {
+  background-color: @borders;
+}
+
+/* Progress bar trough on light-only backgrounds. */
+progressbar trough {
+  background-color: @theme_base_color;
+}

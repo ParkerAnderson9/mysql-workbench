@@ -187,6 +187,7 @@ namespace wb {
     bool full_init;       // True by default. Should be switched off when the options are created for an already running
                           // instance of WB.
     bool logLevelSet;
+    bool darkTheme;       // True when the dark color theme was requested on the command line or environment.
     WBOptions(const std::string &appBinaryName);
     ~WBOptions();
     void analyzeCommandLineArguments();

@@ -196,7 +196,8 @@ WBOptions::WBOptions(const std::string &appBinaryName)
     testing(false),
     init_python(true),
     full_init(true),
-    logLevelSet(false) {
+    logLevelSet(false),
+    darkTheme(false) {
   // Allocate this on heap so we silent gcc
   programOptions = new dataTypes::OptionsList();
   logDebug("Creating WBOptions\n");
@@ -315,6 +316,13 @@ WBOptions::WBOptions(const std::string &appBinaryName)
                                                   "quit-when-done", "Quit Workbench when the script is done",
                                                   [this](const dataTypes::OptionEntry &entry, int *retval) {
                                                     quit_when_done = entry.value.logicalValue;
+                                                    return true;
+                                                  }));
+
+  programOptions->addEntry(dataTypes::OptionEntry(dataTypes::OptionArgumentType::OptionArgumentLogical,
+                                                  "dark-theme", "Enable the dark color theme for the Workbench UI",
+                                                  [this](const dataTypes::OptionEntry &entry, int *retval) {
+                                                    darkTheme = entry.value.logicalValue;
                                                     return true;
                                                   }));
 

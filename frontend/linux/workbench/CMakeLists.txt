@@ -6,6 +6,7 @@ set(WORKBENCH_DATA_FILES
     res/diagram_size_form.glade
     res/input_dialog.glade
     workbench.css
+    workbench-dark.css
 )
 install(FILES ${WORKBENCH_DATA_FILES} DESTINATION ${WB_PACKAGE_SHARED_DIR})
 

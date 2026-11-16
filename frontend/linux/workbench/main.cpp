@@ -137,6 +137,25 @@ int main(int argc, char **argv) {
     if (getenv("WB_VERBOSE"))
       wboptions.verbose = true;
 
+    if (getenv("WB_DARK_THEME"))
+      wboptions.darkTheme = true;
+
+    if (wboptions.darkTheme) {
+      // Request the dark variant of the active GTK theme and layer
+      // Workbench's own dark CSS overrides on top of it.
+      auto settings = Gtk::Settings::get_default();
+      if (settings)
+        settings->property_gtk_application_prefer_dark_theme() = true;
+      try {
+        auto darkCss = Gtk::CssProvider::create();
+        darkCss->load_from_path(wboptions.basedir + "/workbench-dark.css");
+        Gtk::StyleContext::add_provider_for_screen(Gdk::Screen::get_default(), darkCss,
+                                                   GTK_STYLE_PROVIDER_PRIORITY_USER + 10);
+      } catch (Glib::Error &err) {
+        logError("Unable to load dark theme file: %s\n", std::string(wboptions.basedir + "/workbench-dark.css").c_str());
+      }
+    }
+
     mforms::gtk::init(getenv("WB_FORCE_SYSTEM_COLORS") != NULL);
     mforms::gtk::WizardImpl::set_icon_path(wboptions.basedir + "/images");
     { lf_record_grid_init(); }

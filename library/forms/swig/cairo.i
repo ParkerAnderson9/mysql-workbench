@@ -119,13 +119,25 @@
 
 
 
+%{
+/* Compatibility shim: SWIG 4.1+ changed SWIG_Python_AppendOutput to take an
+ * extra is_void argument. (result)==Py_None reproduces the old behaviour for
+ * argout typemaps, where the first appended value replaces the void-result
+ * placeholder. */
+#if SWIG_VERSION >= 0x040100
+#define WB_SWIG_APPEND_OUTPUT(result, obj) SWIG_Python_AppendOutput((result), (obj), (result) == Py_None)
+#else
+#define WB_SWIG_APPEND_OUTPUT(result, obj) SWIG_Python_AppendOutput((result), (obj))
+#endif
+%}
+
 %typemap(in, numinputs=0) cairo_text_extents_t *extents (cairo_text_extents_t extout) {
       $1 = &extout;
 }
 
 %typemap(argout) cairo_text_extents_t *extents {
       PyObject *o= SWIG_NewPointerObj(new cairo_text_extents_t(*$1), SWIGTYPE_p_cairo_text_extents_t, 0 |  0 );
-      $result= SWIG_Python_AppendOutput($result, o);
+      $result= WB_SWIG_APPEND_OUTPUT($result, o);
 }
 
 %typemap(in) const char* (std::string s) {
